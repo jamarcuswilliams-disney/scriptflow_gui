@@ -1,0 +1,8 @@
+{
+  "initialized": false,
+  "flowDir" : "$USER_HOME/.flow",
+  "flowCommandDir": "$USER_HOME/.flows/commands",
+  "flowFileName": "flows.json",
+  "defaultFlowPath": ".",
+  "terminalProfile": "bash"
+}

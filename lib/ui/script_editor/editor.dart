@@ -16,36 +16,22 @@
 // lines that start with a #! will be ignored
 // basically building an IDE for the user to write scripts
 // The ScriptEditor class will be able to take in a script and parse it into formatted text and textfields
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TextEditor extends StatefulWidget {
-  const TextEditor({super.key});
+  TextEditor({super.key});
+
+  final TextEditingController controller =
+      TextEditingController(text: '!#/bin/bash\n\n');
 
   @override
   State<TextEditor> createState() => _TextEditorState();
 }
 
 class _TextEditorState extends State<TextEditor> {
-  final TextEditingController _controller =
-      TextEditingController(text: '!#/bin/bash\n\n');
-
-  // disable backspace if the cursor is on the initial shebang line
-  void _onBackspace() {
-    if (_controller.selection.baseOffset <= 12) {
-      _controller.selection =
-          TextSelection.fromPosition(const TextPosition(offset: 12));
-    }
-
-    if (_controller.text.isEmpty || _controller.selection.baseOffset == 0) {
-      _controller.text = '!#/bin/bash\n\n';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var availableWidth = screenSize.width - 500;
     return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -55,17 +41,18 @@ class _TextEditorState extends State<TextEditor> {
             child: Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: SizedBox(
-                width: 50,
+                width: screenSize.width * .02,
+                height: screenSize.height,
                 child: ListView.builder(
-                  itemCount: _controller.text.split('\n').length,
+                  itemCount: widget.controller.text.split('\n').length,
                   itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 1.0),
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 1.0),
                       child: Text(
-                        '${index + 1}',
+                        '-',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: Color(0x90C1C1C1),
+                        style: TextStyle(
+                            color: Colors.white,
                             fontSize: 16.0,
                             fontFamily: 'Courier New'),
                       ),
@@ -76,26 +63,26 @@ class _TextEditorState extends State<TextEditor> {
             ),
           ),
           SizedBox(
-            width: availableWidth,
+            width: screenSize.width * .68,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 2),
               child: TextField(
                 textAlignVertical: TextAlignVertical.top,
                 cursorOpacityAnimates: true,
                 cursorColor: const Color(0x90C1C1C1),
                 style: const TextStyle(
-                  leadingDistribution: TextLeadingDistribution.even,
-                    color: Color(0x90C1C1C1),
+                    leadingDistribution: TextLeadingDistribution.even,
+                    color: Colors.white,
                     fontSize: 16.0,
                     fontFamily: 'Courier New'),
-                controller: _controller,
+                controller: widget.controller,
                 maxLines: null,
                 minLines: null,
                 expands: true,
                 onChanged: (text) {
                   setState(() {
-                    _onBackspace();
-                    _controller.text =
+                    widget.controller.text =
                         text; // TODO: [riverpod] use state notifier for script editor
                   });
                 },
